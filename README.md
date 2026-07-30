@@ -150,12 +150,12 @@ Kripa Mehndiratta
 
 Documentation & GitHub
 
-Saumya Kumari
+Saumya Kumari and srishti Kumari
 
 Presentation 
 
-Avinash Dubey and
-Srishti Kumari
+Avinash Dubey 
+
 
 ---
 
