@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Adjust this to wherever your tested backend is running.
 const API = axios.create({
     baseURL: 'http://localhost:5000/api',
 });
