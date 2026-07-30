@@ -110,8 +110,8 @@ Frontend
 
 Backend
 
-- Node.js
-- Express.js
+- Python
+- Python Flask
 
 Database
 
@@ -138,24 +138,24 @@ Team Members
 
 Team Lead
 
-Kripa
+Kripa Mehndiratta
 
 Frontend
 
-Akash
+Akash Kumar Gautam
 
 Backend
 
-Kripa
+Kripa Mehndiratta
 
 Documentation & GitHub
 
-Saumya
+Saumya Kumari
 
-Presentation
+Presentation 
 
-Avinash and
-Srishti
+Avinash Dubey and
+Srishti Kumari
 
 ---
 
