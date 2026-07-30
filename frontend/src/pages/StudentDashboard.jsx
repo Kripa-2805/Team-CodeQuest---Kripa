@@ -17,7 +17,15 @@ export default function StudentDashboard() {
     try {
       // Backend scopes /issues to the logged-in student automatically.
       const res = await API.get('/issues');
-      setIssues(res.data);
+      const data = res.data;
+      const list = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.issues)
+        ? data.issues
+        : Array.isArray(data?.data)
+        ? data.data
+        : [];
+      setIssues(list);
     } catch (err) {
       console.error('Error fetching grievances:', err);
     } finally {
