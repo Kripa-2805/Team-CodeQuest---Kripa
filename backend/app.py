@@ -3,17 +3,14 @@ from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
-
 load_dotenv()
-
 from models import db
 from routes.auth_routes import auth_bp
 from routes.issue_routes import issue_bp
 from routes.admin_routes import admin_bp
 
-
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='frontend_dist', static_url_path='')
     app.config.from_object('config.Config')
 
     # Ensure folders exist
@@ -37,11 +34,19 @@ def create_app():
     def health_check():
         return {'status': 'ok', 'message': 'Grievance Tracker API is running'}, 200
 
+    # Serve React frontend for all non-API routes
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve_frontend(path):
+        if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+            return send_from_directory(app.static_folder, path)
+        else:
+            return send_from_directory(app.static_folder, 'index.html')
+
     with app.app_context():
         db.create_all()
 
     return app
-
 
 app = create_app()
 
