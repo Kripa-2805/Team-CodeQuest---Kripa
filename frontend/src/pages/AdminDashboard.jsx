@@ -23,9 +23,26 @@ export default function AdminDashboard() {
         API.get('/stats'),
         API.get('/staff').catch(() => ({ data: [] })),
       ]);
-      setIssues(issuesRes.data);
+      const issuesData = issuesRes.data;
+      const issuesList = Array.isArray(issuesData)
+        ? issuesData
+        : Array.isArray(issuesData?.issues)
+        ? issuesData.issues
+        : Array.isArray(issuesData?.data)
+        ? issuesData.data
+        : [];
+      setIssues(issuesList);
       setStats(statsRes.data);
-      setStaff(staffRes.data || []);
+
+      const staffData = staffRes.data;
+      const staffList = Array.isArray(staffData)
+        ? staffData
+        : Array.isArray(staffData?.staff)
+        ? staffData.staff
+        : Array.isArray(staffData?.data)
+        ? staffData.data
+        : [];
+      setStaff(staffList);
     } catch (err) {
       console.error('Error fetching admin data:', err);
     } finally {
@@ -154,3 +171,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+
