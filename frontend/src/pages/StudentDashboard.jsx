@@ -10,14 +10,18 @@ export default function StudentDashboard() {
   const [category, setCategory] = useState('Maintenance');
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const fileInputRef = useRef(null);
 
   const fetchIssues = async () => {
     try {
-      const res = await API.get('/issues/my-issues');
+      // Backend scopes /issues to the logged-in student automatically.
+      const res = await API.get('/issues');
       setIssues(res.data);
     } catch (err) {
       console.error('Error fetching grievances:', err);
+    } finally {
+      setFetching(false);
     }
   };
 
@@ -39,8 +43,7 @@ export default function StudentDashboard() {
       await API.post('/issues', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      
-      // Clear form inputs
+
       setTitle('');
       setDescription('');
       setCategory('Maintenance');
@@ -59,13 +62,15 @@ export default function StudentDashboard() {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <h2>Student Grievance Portal</h2>
-        <p>Submit and track your campus concerns in real time</p>
+        <p>
+          Submit and track your campus concerns in real time.{' '}
+          <span className="hand">We've got you covered!</span>
+        </p>
       </header>
 
       <div className="dashboard-grid">
-        {/* Issue Submission Card */}
         <section className="card">
-          <h3>Submit New Grievance</h3>
+          <h3>📌 Submit New Grievance</h3>
           <form onSubmit={handleRaiseIssue} className="form-stack">
             <div className="input-group">
               <label>Title</label>
@@ -84,6 +89,8 @@ export default function StudentDashboard() {
                 <option value="Maintenance">Maintenance</option>
                 <option value="Electrical">Electrical</option>
                 <option value="Plumbing">Plumbing</option>
+                <option value="Hostel">Hostel</option>
+                <option value="IT">IT</option>
                 <option value="Academic">Academic</option>
               </select>
             </div>
@@ -109,17 +116,22 @@ export default function StudentDashboard() {
             </div>
 
             <button type="submit" className="btn-primary" disabled={loading}>
+              {loading && <span className="spinner" />}
               {loading ? 'Submitting...' : 'Submit Grievance'}
             </button>
           </form>
         </section>
 
-        {/* Reported Issues Card */}
         <section className="card">
-          <h3>Your Reported Grievances</h3>
+          <h3>🗂️ Your Reported Grievances</h3>
           <div className="issue-list">
-            {issues.length === 0 ? (
-              <p className="empty-state">No grievances submitted yet.</p>
+            {fetching ? (
+              <p className="empty-state">Loading your grievances...</p>
+            ) : issues.length === 0 ? (
+              <div className="empty-state">
+                Nothing here yet.
+                <span className="hand">Raise your first issue on the left →</span>
+              </div>
             ) : (
               issues.map((issue) => (
                 <div key={issue.id} className="issue-card">
