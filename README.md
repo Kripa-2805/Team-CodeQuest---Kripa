@@ -154,7 +154,7 @@ Saumya
 
 Presentation
 
-Avinash
+Avinash and
 Srishti
 
 ---
@@ -165,5 +165,5 @@ To create a transparent, accountable, and efficient grievance management system 
 
 ---
 
-Made for Hackathon 2026.
+Made for Hackathon 2026 Summer of codefest 2.O
 
