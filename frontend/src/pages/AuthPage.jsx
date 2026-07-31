@@ -59,6 +59,27 @@ export default function AuthPage() {
             flickering lab light — report it, watch staff get assigned, and
             never let an issue go quiet again.</>}
         </p>
+        <div className="hero-3d-scene">
+          <div className="hero-3d-stage">
+            <div className="hero-3d-card card-back">
+              <span className="c3d-icon">🏢</span>
+              <span className="c3d-label">Academic Block</span>
+            </div>
+            <div className="hero-3d-card card-mid">
+              <span className="c3d-icon">🏠</span>
+              <span className="c3d-label">Hostel</span>
+            </div>
+            <div className="hero-3d-card card-front">
+              <span className="c3d-icon">{role === 'admin' ? '🛠️' : '🔧'}</span>
+              <span className="c3d-label">
+                {role === 'admin' ? 'Assign & Resolve' : 'Raise & Track'}
+              </span>
+            </div>
+            <div className="hero-3d-orb orb-a" />
+            <div className="hero-3d-orb orb-b" />
+            <div className="hero-3d-orb orb-c" />
+          </div>
+        </div>
         <div className="hero-notes">
           {role === 'admin' ? (
             <>
