@@ -40,7 +40,7 @@ export default function AuthPage() {
     <div className="auth-shell fade-in">
       <div className="auth-hero">
         <span className="eyebrow">welcome to</span>
-        <h1>FixIt Campus</h1>
+        <h1>FIXora</h1>
         <p>
           Raise it once, track it live. From a leaky pipe in the hostel to a
           flickering lab light — report it, watch staff get assigned, and
