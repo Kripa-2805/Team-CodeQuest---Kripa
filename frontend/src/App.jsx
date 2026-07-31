@@ -20,7 +20,7 @@ function MainRouter() {
       <nav className="navbar">
         <div className="nav-brand">
           <span className="pin-dot" />
-          FixIt Campus
+          FIXora
           <span className="tag">— sorted, not ignored</span>
         </div>
         <div className="nav-user">
