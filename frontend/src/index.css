@@ -1,4 +1,4 @@
-/* ===== FixIt Campus — Corkboard Theme ===== */
+/* ===== FIXora — Corkboard Theme ===== */
 
 :root {
   --bg: #f6f1e4;
@@ -515,7 +515,98 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   z-index: 5;
 }
 
-/* ===== Loading spinner ===== */
+.auth-hero-admin {
+  background: linear-gradient(160deg, #7a3fb3 0%, #2d1454 100%) !important;
+}
+[data-theme="dark"] .auth-hero-admin { background: linear-gradient(160deg, #5c2d8f 0%, #1a0d33 100%) !important; }
+.auth-hero-admin .eyebrow { color: #ffd166; }
+
+/* ===== Category color system (used to color-code issue cards / pills by type) ===== */
+.category-pill[data-cat="Electrical"] { color: #b8860b; background: rgba(184,134,11,0.14); border-color: #b8860b; }
+.category-pill[data-cat="Plumbing"] { color: var(--sky); background: rgba(43,108,176,0.12); border-color: var(--sky); }
+.category-pill[data-cat="Hostel"] { color: var(--coral); background: rgba(216,80,58,0.12); border-color: var(--coral); }
+.category-pill[data-cat="IT"] { color: #7a3fb3; background: rgba(122,63,179,0.12); border-color: #7a3fb3; }
+.category-pill[data-cat="Academic"] { color: var(--teal); background: rgba(31,122,108,0.12); border-color: var(--teal); }
+.category-pill[data-cat="Maintenance"] { color: var(--marigold-dark); background: rgba(242,169,59,0.16); border-color: var(--marigold-dark); }
+
+.issue-card[data-cat="Electrical"] { border-left-color: #b8860b; }
+.issue-card[data-cat="Plumbing"] { border-left-color: var(--sky); }
+.issue-card[data-cat="Hostel"] { border-left-color: var(--coral); }
+.issue-card[data-cat="IT"] { border-left-color: #7a3fb3; }
+.issue-card[data-cat="Academic"] { border-left-color: var(--teal); }
+.issue-card[data-cat="Maintenance"] { border-left-color: var(--marigold); }
+
+/* ===== Issue meta line (location) ===== */
+.issue-meta {
+  font-size: 0.78rem !important;
+  color: var(--ink-soft) !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.35rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ===== Premium touches ===== */
+.nav-brand .pin-dot { animation: pulse-badge 2.4s ease-in-out infinite; }
+
+.stat-pill {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.stat-pill::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--marigold), var(--coral), var(--teal), var(--sky));
+  background-size: 300% 100%;
+  animation: gradient-shift 6s linear infinite;
+}
+.stat-pill:hover { transform: translateY(-3px); box-shadow: 6px 8px 0 var(--shadow); }
+.stat-pill .num {
+  background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@keyframes gradient-shift { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover:not(:disabled)::after { left: 130%; }
+
+.admin-table tbody tr {
+  animation: fadeIn 0.4s ease both;
+}
+
+.auth-card {
+  animation: cardPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes cardPop {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.role-toggle button.active { animation: none; }
+
+@media (max-width: 500px) {
+  .auth-hero { min-height: 40vh; }
+  .hero-notes { height: 170px; }
+}
 .spinner {
   width: 16px; height: 16px;
   border: 2px solid rgba(255,255,255,0.4);
