@@ -10,6 +10,8 @@ export default function AdminDashboard() {
   const [staff, setStaff] = useState([]);
   const [statusFilter, setStatusFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [locationTypeFilter, setLocationTypeFilter] = useState('');
+  const [blockFilter, setBlockFilter] = useState('');
   const [fetching, setFetching] = useState(true);
 
   const fetchData = useCallback(async () => {
@@ -17,6 +19,8 @@ export default function AdminDashboard() {
       const params = {};
       if (statusFilter) params.status = statusFilter;
       if (categoryFilter) params.category = categoryFilter;
+      if (locationTypeFilter) params.location_type = locationTypeFilter;
+      if (blockFilter) params.block_no = blockFilter;
 
       const [issuesRes, statsRes, staffRes] = await Promise.all([
         API.get('/issues', { params }),
@@ -48,7 +52,7 @@ export default function AdminDashboard() {
     } finally {
       setFetching(false);
     }
-  }, [statusFilter, categoryFilter]);
+  }, [statusFilter, categoryFilter, locationTypeFilter, blockFilter]);
 
   useEffect(() => {
     fetchData();
@@ -75,12 +79,18 @@ export default function AdminDashboard() {
 
   const categories = ['Maintenance', 'Electrical', 'Plumbing', 'Hostel', 'IT', 'Academic'];
 
+  const displayedIssues = issues.filter((issue) => {
+    if (locationTypeFilter && issue.location_type !== locationTypeFilter) return false;
+    if (blockFilter && !(issue.block_no || '').toLowerCase().includes(blockFilter.toLowerCase())) return false;
+    return true;
+  });
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
         <h2>Admin Control Center</h2>
         <p>
-          Manage and resolve campus-wide complaints.{' '}
+          Filter by block, hostel, or issue type — assign staff, track SLAs.{' '}
           <span className="hand">Nothing slips through.</span>
         </p>
       </header>
@@ -108,9 +118,21 @@ export default function AdminDashboard() {
               <option value="resolved">Resolved</option>
             </select>
             <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-              <option value="">All categories</option>
+              <option value="">All types</option>
               {categories.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
+            <select value={locationTypeFilter} onChange={(e) => setLocationTypeFilter(e.target.value)}>
+              <option value="">All (Hostel + Academic)</option>
+              <option value="Hostel">Hostel</option>
+              <option value="Academic Block">Academic Block</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Filter by block no..."
+              value={blockFilter}
+              onChange={(e) => setBlockFilter(e.target.value)}
+              style={{ minWidth: '160px' }}
+            />
           </div>
         </div>
 
@@ -118,8 +140,11 @@ export default function AdminDashboard() {
           <table className="admin-table">
             <thead>
               <tr>
+                <th>Student</th>
+                <th>Reg No.</th>
+                <th>Block</th>
                 <th>Title</th>
-                <th>Category</th>
+                <th>Type</th>
                 <th>Status</th>
                 <th>SLA Timer</th>
                 <th>Assign</th>
@@ -128,12 +153,15 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {fetching ? (
-                <tr><td colSpan={6} className="empty-state">Loading grievances...</td></tr>
-              ) : issues.length === 0 ? (
-                <tr><td colSpan={6} className="empty-state">No grievances match this filter.</td></tr>
+                <tr><td colSpan={9} className="empty-state">Loading grievances...</td></tr>
+              ) : displayedIssues.length === 0 ? (
+                <tr><td colSpan={9} className="empty-state">No grievances match this filter.</td></tr>
               ) : (
-                issues.map((issue) => (
+                displayedIssues.map((issue) => (
                   <tr key={issue.id}>
+                    <td>{issue.student_name || '—'}</td>
+                    <td>{issue.reg_no || '—'}</td>
+                    <td>{issue.location_type || 'Hostel'} · {issue.block_no || '—'}</td>
                     <td><strong>{issue.title}</strong></td>
                     <td><span className="category-pill">{issue.category}</span></td>
                     <td><StatusBadge status={issue.status} /></td>
