@@ -9,8 +9,17 @@ export default function AuthPage() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const { login } = useContext(AuthContext);
   const { theme, toggleTheme } = useContext(ThemeContext);
+
+  const handleSceneMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: py * -22, y: px * 26 });
+  };
+  const resetTilt = () => setTilt({ x: 0, y: 0 });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,25 +68,38 @@ export default function AuthPage() {
             flickering lab light — report it, watch staff get assigned, and
             never let an issue go quiet again.</>}
         </p>
-        <div className="hero-3d-scene">
-          <div className="hero-3d-stage">
+        <div
+          className="hero-3d-scene"
+          onMouseMove={handleSceneMove}
+          onMouseLeave={resetTilt}
+        >
+          <div className="hero-3d-glow" />
+          <div className="hero-3d-ring" />
+          <div
+            className="hero-3d-stage"
+            style={{ transform: `rotateX(${8 + tilt.x}deg) rotateY(${-10 + tilt.y}deg)` }}
+          >
             <div className="hero-3d-card card-back">
-              <span className="c3d-icon">🏢</span>
+              <span className="c3d-badge badge-teal"><span className="c3d-icon">🏢</span></span>
               <span className="c3d-label">Academic Block</span>
             </div>
             <div className="hero-3d-card card-mid">
-              <span className="c3d-icon">🏠</span>
+              <span className="c3d-badge badge-coral"><span className="c3d-icon">🏠</span></span>
               <span className="c3d-label">Hostel</span>
             </div>
             <div className="hero-3d-card card-front">
-              <span className="c3d-icon">{role === 'admin' ? '🛠️' : '🔧'}</span>
+              <span className="c3d-badge badge-marigold">
+                <span className="c3d-icon">{role === 'admin' ? '🛠️' : '🔧'}</span>
+              </span>
               <span className="c3d-label">
                 {role === 'admin' ? 'Assign & Resolve' : 'Raise & Track'}
               </span>
+              <span className="c3d-shine" />
             </div>
             <div className="hero-3d-orb orb-a" />
             <div className="hero-3d-orb orb-b" />
             <div className="hero-3d-orb orb-c" />
+            <div className="hero-3d-orb orb-d" />
           </div>
         </div>
         <div className="hero-notes">
