@@ -76,30 +76,32 @@ export default function AuthPage() {
           <div className="hero-3d-glow" />
           <div className="hero-3d-ring" />
           <div
-            className="hero-3d-stage"
+            className="hero-3d-orbit"
             style={{ transform: `rotateX(${8 + tilt.x}deg) rotateY(${-10 + tilt.y}deg)` }}
           >
-            <div className="hero-3d-card card-back">
-              <span className="c3d-badge badge-teal"><span className="c3d-icon">🏢</span></span>
-              <span className="c3d-label">Academic Block</span>
+            <div className="hero-3d-stage">
+              <div className="hero-3d-card card-back">
+                <span className="c3d-badge badge-teal"><span className="c3d-icon">🏢</span></span>
+                <span className="c3d-label">Academic Block</span>
+              </div>
+              <div className="hero-3d-card card-mid">
+                <span className="c3d-badge badge-coral"><span className="c3d-icon">🏠</span></span>
+                <span className="c3d-label">Hostel</span>
+              </div>
+              <div className="hero-3d-card card-front">
+                <span className="c3d-badge badge-marigold">
+                  <span className="c3d-icon">{role === 'admin' ? '🛠️' : '🔧'}</span>
+                </span>
+                <span className="c3d-label">
+                  {role === 'admin' ? 'Assign & Resolve' : 'Raise & Track'}
+                </span>
+                <span className="c3d-shine" />
+              </div>
+              <div className="hero-3d-orb orb-a" />
+              <div className="hero-3d-orb orb-b" />
+              <div className="hero-3d-orb orb-c" />
+              <div className="hero-3d-orb orb-d" />
             </div>
-            <div className="hero-3d-card card-mid">
-              <span className="c3d-badge badge-coral"><span className="c3d-icon">🏠</span></span>
-              <span className="c3d-label">Hostel</span>
-            </div>
-            <div className="hero-3d-card card-front">
-              <span className="c3d-badge badge-marigold">
-                <span className="c3d-icon">{role === 'admin' ? '🛠️' : '🔧'}</span>
-              </span>
-              <span className="c3d-label">
-                {role === 'admin' ? 'Assign & Resolve' : 'Raise & Track'}
-              </span>
-              <span className="c3d-shine" />
-            </div>
-            <div className="hero-3d-orb orb-a" />
-            <div className="hero-3d-orb orb-b" />
-            <div className="hero-3d-orb orb-c" />
-            <div className="hero-3d-orb orb-d" />
           </div>
         </div>
         <div className="hero-notes">
