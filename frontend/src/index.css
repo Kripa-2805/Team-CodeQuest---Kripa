@@ -363,18 +363,24 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   position: relative;
   perspective: 1400px;
   height: 240px;
+  width: 300px;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.5rem 0 1.8rem;
+  margin: 0.5rem auto 1.8rem;
   cursor: grab;
+  overflow: visible;
 }
 
 .hero-3d-glow {
   position: absolute;
-  inset: -20px;
-  background: radial-gradient(circle at 55% 45%, rgba(242,169,59,0.28), transparent 60%);
-  filter: blur(10px);
+  width: 260px;
+  height: 260px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(242,169,59,0.25), transparent 65%);
+  filter: blur(14px);
   pointer-events: none;
   z-index: 0;
 }
@@ -419,8 +425,8 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
 
 .hero-3d-card {
   position: absolute;
-  width: 158px;
-  height: 108px;
+  width: 140px;
+  height: 96px;
   border-radius: 18px;
   display: flex;
   flex-direction: column;
@@ -459,8 +465,8 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   animation: float-back 4.5s ease-in-out infinite;
 }
 @keyframes float-back {
-  0%, 100% { transform: translateZ(-90px) translate(52px, -40px) rotateZ(-4deg) translateY(0); }
-  50% { transform: translateZ(-90px) translate(52px, -46px) rotateZ(-6deg) translateY(-12px); }
+  0%, 100% { transform: translateZ(-90px) translate(60px, -52px) rotateZ(-4deg) translateY(0); }
+  50% { transform: translateZ(-90px) translate(60px, -58px) rotateZ(-6deg) translateY(-10px); }
 }
 .card-mid {
   background: linear-gradient(155deg, rgba(216,80,58,0.55), rgba(150,50,35,0.75));
@@ -471,8 +477,8 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   animation-delay: 0.3s;
 }
 @keyframes float-mid {
-  0%, 100% { transform: translateZ(-10px) translate(-46px, 18px) rotateZ(3deg) translateY(0); }
-  50% { transform: translateZ(-10px) translate(-46px, 10px) rotateZ(5deg) translateY(-14px); }
+  0%, 100% { transform: translateZ(-10px) translate(-64px, 6px) rotateZ(3deg) translateY(0); }
+  50% { transform: translateZ(-10px) translate(-64px, -2px) rotateZ(5deg) translateY(-12px); }
 }
 .card-front {
   background: linear-gradient(155deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06));
@@ -483,8 +489,8 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   animation-delay: 0.6s;
 }
 @keyframes float-front {
-  0%, 100% { transform: translateZ(80px) translate(4px, 55px) rotateZ(-1deg) translateY(0); }
-  50% { transform: translateZ(90px) translate(4px, 46px) rotateZ(1deg) translateY(-16px); }
+  0%, 100% { transform: translateZ(80px) translate(0px, 64px) rotateZ(-1deg) translateY(0); }
+  50% { transform: translateZ(90px) translate(0px, 56px) rotateZ(1deg) translateY(-14px); }
 }
 .c3d-shine {
   position: absolute;
