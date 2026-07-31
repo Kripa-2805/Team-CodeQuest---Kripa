@@ -387,18 +387,34 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   background: conic-gradient(from 0deg, var(--marigold), var(--coral), var(--teal), var(--sky), var(--marigold));
   opacity: 0.22;
   filter: blur(28px);
-  animation: ring-spin 12s linear infinite;
+  animation: ring-spin 12s linear infinite, ring-pulse 3.5s ease-in-out infinite;
   z-index: 0;
 }
 @keyframes ring-spin { to { transform: rotate(360deg); } }
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.32; }
+}
 
-.hero-3d-stage {
+.hero-3d-orbit {
   position: relative;
   width: 270px;
   height: 190px;
   transform-style: preserve-3d;
   transition: transform 0.15s ease-out;
   z-index: 1;
+}
+
+.hero-3d-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: stage-spin 9s ease-in-out infinite;
+}
+@keyframes stage-spin {
+  0%, 100% { transform: rotateY(-6deg) rotateX(2deg) translateZ(0); }
+  50% { transform: rotateY(10deg) rotateX(-3deg) translateZ(10px); }
 }
 
 .hero-3d-card {
@@ -439,22 +455,36 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   background: linear-gradient(155deg, rgba(31,122,108,0.55), rgba(20,80,70,0.75));
   border: 1px solid rgba(255,255,255,0.18);
   box-shadow: 0 30px 50px rgba(0,0,0,0.45);
-  transform: translateZ(-90px) translate(52px, -40px) rotateZ(-4deg);
   opacity: 0.85;
+  animation: float-back 4.5s ease-in-out infinite;
+}
+@keyframes float-back {
+  0%, 100% { transform: translateZ(-90px) translate(52px, -40px) rotateZ(-4deg) translateY(0); }
+  50% { transform: translateZ(-90px) translate(52px, -46px) rotateZ(-6deg) translateY(-12px); }
 }
 .card-mid {
   background: linear-gradient(155deg, rgba(216,80,58,0.55), rgba(150,50,35,0.75));
   border: 1px solid rgba(255,255,255,0.18);
   box-shadow: 0 30px 50px rgba(0,0,0,0.45);
-  transform: translateZ(-10px) translate(-46px, 18px) rotateZ(3deg);
   opacity: 0.92;
+  animation: float-mid 3.6s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+@keyframes float-mid {
+  0%, 100% { transform: translateZ(-10px) translate(-46px, 18px) rotateZ(3deg) translateY(0); }
+  50% { transform: translateZ(-10px) translate(-46px, 10px) rotateZ(5deg) translateY(-14px); }
 }
 .card-front {
   background: linear-gradient(155deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06));
   border: 1px solid rgba(255,255,255,0.35);
   box-shadow: 0 35px 65px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.4);
-  transform: translateZ(80px) translate(4px, 55px) rotateZ(-1deg);
   overflow: hidden;
+  animation: float-front 4s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+@keyframes float-front {
+  0%, 100% { transform: translateZ(80px) translate(4px, 55px) rotateZ(-1deg) translateY(0); }
+  50% { transform: translateZ(90px) translate(4px, 46px) rotateZ(1deg) translateY(-16px); }
 }
 .c3d-shine {
   position: absolute;
@@ -473,46 +503,51 @@ input[type="file"] { padding: 0.5rem; cursor: pointer; }
   position: absolute;
   border-radius: 50%;
   opacity: 0.9;
-  animation: orb-float 4.5s ease-in-out infinite;
   box-shadow: 0 0 18px currentColor;
 }
 .orb-a {
   width: 16px; height: 16px;
   background: var(--marigold); color: var(--marigold);
   top: -14px; left: 6px;
-  transform: translateZ(120px);
-  animation-delay: 0s;
+  animation: orbit-a 5s linear infinite;
+}
+@keyframes orbit-a {
+  0% { transform: translateZ(120px) rotate(0deg) translateX(18px) rotate(0deg); }
+  100% { transform: translateZ(120px) rotate(360deg) translateX(18px) rotate(-360deg); }
 }
 .orb-b {
   width: 11px; height: 11px;
   background: var(--coral); color: var(--coral);
   bottom: 4px; right: -4px;
-  transform: translateZ(50px);
-  animation-delay: 0.7s;
+  animation: orbit-b 4s linear infinite reverse;
+}
+@keyframes orbit-b {
+  0% { transform: translateZ(50px) rotate(0deg) translateX(14px) rotate(0deg); }
+  100% { transform: translateZ(50px) rotate(360deg) translateX(14px) rotate(-360deg); }
 }
 .orb-c {
   width: 9px; height: 9px;
   background: var(--teal); color: var(--teal);
   top: 70px; right: -18px;
-  transform: translateZ(130px);
+  animation: orb-float 3.2s ease-in-out infinite;
   animation-delay: 1.3s;
 }
 .orb-d {
   width: 7px; height: 7px;
   background: var(--sky); color: var(--sky);
   bottom: 40px; left: -16px;
-  transform: translateZ(100px);
+  animation: orb-float 3.8s ease-in-out infinite;
   animation-delay: 2s;
 }
 @keyframes orb-float {
-  0%, 100% { transform: translateY(0) translateZ(var(--z, 60px)) scale(1); }
-  50% { transform: translateY(-16px) translateZ(var(--z, 60px)) scale(1.15); }
+  0%, 100% { transform: translateZ(100px) translateY(0) scale(1); }
+  50% { transform: translateZ(100px) translateY(-18px) scale(1.2); }
 }
 
 @media (max-width: 880px) {
   .hero-3d-scene { height: 190px; margin-bottom: 1.2rem; }
   .hero-3d-ring { width: 190px; height: 190px; }
-  .hero-3d-stage { width: 220px; height: 160px; }
+  .hero-3d-orbit { width: 220px; height: 160px; }
   .hero-3d-card { width: 130px; height: 90px; }
 }
 
