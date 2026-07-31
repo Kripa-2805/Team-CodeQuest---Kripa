@@ -9,8 +9,10 @@ from utils.sla_checker import check_and_escalate_issues
 
 issue_bp = Blueprint('issues', __name__)
 
-VALID_CATEGORIES = {'electrical', 'plumbing', 'it', 'hostel', 'furniture', 'other'}
+# Matches the categories sent by the frontend dropdown exactly.
+VALID_CATEGORIES = {'Maintenance', 'Electrical', 'Plumbing', 'Hostel', 'IT', 'Academic', 'other'}
 VALID_STATUSES = {'pending', 'in_progress', 'resolved', 'escalated'}
+VALID_LOCATION_TYPES = {'Hostel', 'Academic Block'}
 
 
 @issue_bp.route('/issues', methods=['POST'])
@@ -24,22 +26,29 @@ def create_issue():
         description = request.form.get('description')
         category = request.form.get('category', 'other')
         file_storage = request.files.get('attachment')
-        student_name=request.form.get('student_name'),
-        reg_no=request.form.get('reg_no'),
-        block_no=request.form.get('block_no'),
-        location_type=request.form.get('location_type'),
+        student_name = request.form.get('student_name')
+        reg_no = request.form.get('reg_no')
+        block_no = request.form.get('block_no')
+        location_type = request.form.get('location_type')
     else:
         data = request.get_json(silent=True) or {}
         title = data.get('title')
         description = data.get('description')
         category = data.get('category', 'other')
         file_storage = None
+        student_name = data.get('student_name')
+        reg_no = data.get('reg_no')
+        block_no = data.get('block_no')
+        location_type = data.get('location_type')
 
     if not title or not description:
         return jsonify({'error': 'title and description are required'}), 400
 
     if category not in VALID_CATEGORIES:
         category = 'other'
+
+    if location_type not in VALID_LOCATION_TYPES:
+        location_type = 'Hostel'
 
     attachment_url = None
     if file_storage:
@@ -56,7 +65,11 @@ def create_issue():
         category=category,
         attachment_url=attachment_url,
         created_by=user_id,
-        sla_hours=sla_hours
+        sla_hours=sla_hours,
+        student_name=student_name,
+        reg_no=reg_no,
+        block_no=block_no,
+        location_type=location_type
     )
     db.session.add(issue)
     db.session.flush()  # get issue.id before commit
@@ -80,7 +93,7 @@ def get_issues():
     """
     Students see only their own issues.
     Admin/superadmin see all issues.
-    Optional query params: status, category
+    Optional query params: status, category, location_type, block_no
     """
     # Run SLA check first so lists are always fresh
     check_and_escalate_issues()
@@ -96,6 +109,8 @@ def get_issues():
 
     status_filter = request.args.get('status')
     category_filter = request.args.get('category')
+    location_type_filter = request.args.get('location_type')
+    block_filter = request.args.get('block_no')
 
     if status_filter and status_filter in VALID_STATUSES:
         query = query.filter_by(status=status_filter)
@@ -103,9 +118,47 @@ def get_issues():
     if category_filter and category_filter in VALID_CATEGORIES:
         query = query.filter_by(category=category_filter)
 
+    if location_type_filter and location_type_filter in VALID_LOCATION_TYPES:
+        query = query.filter_by(location_type=location_type_filter)
+
+    if block_filter:
+        query = query.filter(Issue.block_no.ilike(f'%{block_filter}%'))
+
     issues = query.order_by(Issue.created_at.desc()).all()
 
     return jsonify({'issues': [i.to_dict() for i in issues]}), 200
+
+
+@issue_bp.route('/stats', methods=['GET'])
+@jwt_required()
+def get_stats():
+    """
+    Returns aggregate counts for the admin overview cards + pie chart.
+    """
+    check_and_escalate_issues()
+
+    claims = get_jwt()
+    role = claims.get('role')
+    user_id = int(get_jwt_identity())
+
+    query = Issue.query
+    if role == 'student':
+        query = query.filter_by(created_by=user_id)
+
+    all_issues = query.all()
+
+    pending = sum(1 for i in all_issues if i.status == 'pending')
+    in_progress = sum(1 for i in all_issues if i.status == 'in_progress')
+    resolved = sum(1 for i in all_issues if i.status == 'resolved')
+    escalated = sum(1 for i in all_issues if i.status == 'escalated')
+
+    return jsonify({
+        'pending': pending,
+        'inProgress': in_progress,
+        'resolved': resolved,
+        'escalated': escalated,
+        'total': len(all_issues)
+    }), 200
 
 
 @issue_bp.route('/issues/<int:issue_id>', methods=['GET'])
