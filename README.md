@@ -126,6 +126,7 @@ Backend
 Database
 
 - SQLite
+- PostgreSQL
 
 Architecture
 
