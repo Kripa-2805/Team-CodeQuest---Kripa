@@ -24,6 +24,10 @@ def create_issue():
         description = request.form.get('description')
         category = request.form.get('category', 'other')
         file_storage = request.files.get('attachment')
+        student_name=request.form.get('student_name'),
+        reg_no=request.form.get('reg_no'),
+        block_no=request.form.get('block_no'),
+        location_type=request.form.get('location_type'),
     else:
         data = request.get_json(silent=True) or {}
         title = data.get('title')
