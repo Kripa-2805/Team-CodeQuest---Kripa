@@ -36,6 +36,12 @@ class Issue(db.Model):
         if not self.sla_deadline:
             self.sla_deadline = datetime.utcnow() + timedelta(hours=sla_hours)
 
+    student_name = db.Column(db.String(120))
+    reg_no = db.Column(db.String(50))
+    block_no = db.Column(db.String(50))
+    location_type = db.Column(db.String(30))
+
+    
     def is_overdue(self):
         return (
             self.status in ('pending', 'in_progress')
