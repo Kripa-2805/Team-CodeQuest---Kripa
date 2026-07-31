@@ -195,10 +195,10 @@ export default function StudentDashboard() {
               </div>
             ) : (
               issues.map((issue) => (
-                <div key={issue.id} className="issue-card">
+                <div key={issue.id} className="issue-card" data-cat={issue.category}>
                   <div className="issue-card-header">
                     <h4>{issue.title}</h4>
-                    <span className="category-pill">{issue.category}</span>
+                    <span className="category-pill" data-cat={issue.category}>{issue.category}</span>
                   </div>
                   <p className="issue-meta">
                     {issue.location_type || 'Hostel'} — {issue.block_no || 'N/A'}
