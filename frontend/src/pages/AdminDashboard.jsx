@@ -163,7 +163,7 @@ export default function AdminDashboard() {
                     <td>{issue.reg_no || '—'}</td>
                     <td>{issue.location_type || 'Hostel'} · {issue.block_no || '—'}</td>
                     <td><strong>{issue.title}</strong></td>
-                    <td><span className="category-pill">{issue.category}</span></td>
+                    <td><span className="category-pill" data-cat={issue.category}>{issue.category}</span></td>
                     <td><StatusBadge status={issue.status} /></td>
                     <td><SLABadge slaDeadline={issue.sla_deadline} status={issue.status} /></td>
                     <td>
