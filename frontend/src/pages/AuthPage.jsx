@@ -21,8 +21,19 @@ export default function AuthPage() {
 
     try {
       const res = await API.post(endpoint, payload);
-      // Backend returns access_token + role on login; registration may also auto-return a token.
+      // Backend returns access_token + user{role, name} on login; registration may also auto-return a token.
       if (res.data.access_token) {
+        const returnedRole = res.data.user?.role || res.data.role;
+        if (!isRegister && role === 'admin' && !['admin', 'superadmin'].includes(returnedRole)) {
+          setError('This account is not an admin account. Switch to Student to sign in.');
+          setLoading(false);
+          return;
+        }
+        if (!isRegister && role === 'student' && returnedRole && returnedRole !== 'student') {
+          setError('This is an admin/staff account. Switch to Admin to sign in.');
+          setLoading(false);
+          return;
+        }
         login(res.data);
       } else {
         // Registered but not logged in yet -> switch to login form.
@@ -30,7 +41,7 @@ export default function AuthPage() {
         setError('Account created — please sign in.');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -38,18 +49,30 @@ export default function AuthPage() {
 
   return (
     <div className="auth-shell fade-in">
-      <div className="auth-hero">
+      <div className={`auth-hero ${role === 'admin' ? 'auth-hero-admin' : ''}`}>
         <span className="eyebrow">welcome to</span>
         <h1>FIXora</h1>
         <p>
-          Raise it once, track it live. From a leaky pipe in the hostel to a
-          flickering lab light — report it, watch staff get assigned, and
-          never let an issue go quiet again.
+          {role === 'admin'
+            ? 'Your command center for every campus complaint — assign staff, track SLAs, and keep every block accountable.'
+            : <>Raise it once, track it live. From a leaky pipe in the hostel to a
+            flickering lab light — report it, watch staff get assigned, and
+            never let an issue go quiet again.</>}
         </p>
         <div className="hero-notes">
-          <div className="floating-note" style={{ '--r': '-6deg' }}>🔧 Hostel tap fixed in 4h</div>
-          <div className="floating-note" style={{ '--r': '4deg' }}>💡 Lab light — In Progress</div>
-          <div className="floating-note" style={{ '--r': '-3deg' }}>⚠️ Escalated: no response 24h</div>
+          {role === 'admin' ? (
+            <>
+              <div className="floating-note" style={{ '--r': '-6deg' }}>📊 42 issues resolved this week</div>
+              <div className="floating-note" style={{ '--r': '4deg' }}>🧰 Staff auto-assigned by block</div>
+              <div className="floating-note" style={{ '--r': '-3deg' }}>⚡ Live SLA breach alerts</div>
+            </>
+          ) : (
+            <>
+              <div className="floating-note" style={{ '--r': '-6deg' }}>🔧 Hostel tap fixed in 4h</div>
+              <div className="floating-note" style={{ '--r': '4deg' }}>💡 Lab light — In Progress</div>
+              <div className="floating-note" style={{ '--r': '-3deg' }}>⚠️ Escalated: no response 24h</div>
+            </>
+          )}
         </div>
       </div>
 
@@ -62,21 +85,23 @@ export default function AuthPage() {
         />
         <div className="auth-card">
           <div className="pin" />
-          <h2>{isRegister ? 'Create your account' : 'Welcome back'}</h2>
+          <h2>{isRegister ? 'Create your account' : role === 'admin' ? 'Admin sign in' : 'Welcome back'}</h2>
           <p className="sub">
-            {isRegister ? 'Join your campus grievance desk' : 'Sign in to track or manage grievances'}
+            {isRegister
+              ? 'Join your campus grievance desk'
+              : role === 'admin'
+              ? 'Access the control center to manage grievances'
+              : 'Sign in to track your grievances'}
           </p>
 
-          {isRegister && (
-            <div className="role-toggle">
-              <button type="button" className={role === 'student' ? 'active' : ''} onClick={() => setRole('student')}>
-                🎓 Student
-              </button>
-              <button type="button" className={role === 'admin' ? 'active' : ''} onClick={() => setRole('admin')}>
-                🛠️ Admin / Staff
-              </button>
-            </div>
-          )}
+          <div className="role-toggle">
+            <button type="button" className={role === 'student' ? 'active' : ''} onClick={() => { setRole('student'); setError(''); }}>
+              🎓 Student
+            </button>
+            <button type="button" className={role === 'admin' ? 'active' : ''} onClick={() => { setRole('admin'); setError(''); }}>
+              🛠️ Admin / Staff
+            </button>
+          </div>
 
           {error && <div className="auth-error">{error}</div>}
 
