@@ -103,24 +103,40 @@ Tech Stack
 
 Frontend
 
-- HTML
-- CSS
-- JavaScript
-- React.js
+- React (Vite)
+- Axios
+- React Context API
+- Recharts
+- Custom CSS (Light/Dark Theme)
+- Vite Preview
+  
+  
 
 Backend
 
-- Python
-- Python Flask
+- Flask (Python)
+- Flask-SQLAlchemy
+- Flask-JWT-Extended (JWT Authentication)
+- Flask-CORS
+- Werkzeug Security (Password Hashing)
+- python-dotenv
+- Gunicorn
+ 
 
 Database
 
-- MongoDB
+- SQLite
 
-Version Control
+Architecture
 
-- Git
-- GitHub
+- Monolithic deployment(Flask serves React build)
+- RESTful API
+- Role - Based Access Control(Student/Admin)
+
+
+Deployment
+
+- Render (Free Tier) with Github Auto-Deploy
 
 ---
 
