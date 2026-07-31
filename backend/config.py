@@ -4,15 +4,23 @@ from datetime import timedelta
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
+def _normalize_db_url(url):
+    # Render (and some other providers) give a URL starting with "postgres://",
+    # but modern SQLAlchemy requires "postgresql://". Auto-fix it here.
+    if url and url.startswith('postgres://'):
+        return url.replace('postgres://', 'postgresql://', 1)
+    return url
+
+
 class Config:
     # General
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-this')
 
     # Database
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
+    SQLALCHEMY_DATABASE_URI = _normalize_db_url(os.environ.get(
         'DATABASE_URL',
         'sqlite:///' + os.path.join(basedir, 'database', 'app.db')
-    )
+    ))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # JWT
