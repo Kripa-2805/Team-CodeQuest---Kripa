@@ -15,10 +15,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (data) => {
+    const role = data.user?.role || data.role;
+    const name = data.user?.name || data.name || 'User';
     localStorage.setItem('token', data.access_token);
-    localStorage.setItem('role', data.role);
-    localStorage.setItem('name', data.name || 'User');
-    setUser({ token: data.access_token, role: data.role, name: data.name });
+    localStorage.setItem('role', role);
+    localStorage.setItem('name', name);
+    setUser({ token: data.access_token, role, name });
   };
 
   const logout = () => {
